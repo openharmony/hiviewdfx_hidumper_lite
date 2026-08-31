@@ -13,10 +13,13 @@
 
 static_library("hidumper_mini") {
   sources = [
+    "../parse_dump_uint64.cpp",
     "hidumper_adapter.c",
     "hidumper_core.c",
   ]
   include_dirs = [
+    "..",
+    "//base/hiviewdfx/hidumper_lite",
     "//base/hiviewdfx/hidumper_lite/mini/interfaces/native/kits",
     "//kernel/liteos_m/kernel/include",
     "//kernel/liteos_m/utils",
@@ -25,5 +28,6 @@ static_library("hidumper_mini") {
     "//commonlibrary/utils_lite/include",
   ]
   cflags = [ "-Wall" ]
+  cflags_cc = [ "-Wall" ]
   deps = [ "//third_party/bounds_checking_function:libsec_shared" ]
 }
