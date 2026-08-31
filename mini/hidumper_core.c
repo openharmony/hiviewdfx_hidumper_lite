@@ -18,6 +18,7 @@
 #include <stdlib.h>
 
 #include "hidumper.h"
+#include "parse_dump_uint64.h"
 
 #ifdef __cplusplus
 #if __cplusplus
@@ -136,9 +137,14 @@ void ParameterMatching(int argc, const char *argv[])
     } else if (argc == THREE_OF_ARGC_PARAMETERS) {
         if (strcmp(argv[0], "-m") == 0) {
 #ifdef OHOS_DEBUG
-            g_hidumperAdapter.DumpMemRegion(
-                strtoull(argv[ONE_OF_ARGC_PARAMETERS], NULL, BUF_SIZE_16),
-                strtoull(argv[TWO_OF_ARGC_PARAMETERS], NULL, BUF_SIZE_16));
+            uint64_t start = 0;
+            uint64_t size = 0;
+            if (!ParseDumpUint64(argv[ONE_OF_ARGC_PARAMETERS], &start) ||
+                !ParseDumpUint64(argv[TWO_OF_ARGC_PARAMETERS], &size)) {
+                printf("Invalid memstart or memsize\n");
+                return;
+            }
+            g_hidumperAdapter.DumpMemRegion(start, size);
 #else
             printf("Unsupported!\n");
 #endif
