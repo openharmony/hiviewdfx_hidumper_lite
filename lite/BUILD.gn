@@ -12,8 +12,16 @@
 # limitations under the License.
 
 static_library("hidumper_lite") {
-  sources = [ "hidumper.c" ]
+  sources = [
+    "../parse_dump_uint64.cpp",
+    "hidumper.c",
+  ]
   cflags = [ "-Wall" ]
-  include_dirs = [ "//third_party/bounds_checking_function/include" ]
+  cflags_cc = [ "-Wall" ]
+  include_dirs = [
+    "..",
+    "//base/hiviewdfx/hidumper_lite",
+    "//third_party/bounds_checking_function/include",
+  ]
   deps = [ "//third_party/bounds_checking_function:libsec_shared" ]
 }

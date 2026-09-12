@@ -24,6 +24,7 @@
 #include <sys/types.h>
 
 #include "securec.h"
+#include "parse_dump_uint64.h"
 
 #define HIDUMPER_DEVICE  "/dev/hidumper"
 #define USER_FAULT_ADDR  0x3
@@ -182,14 +183,28 @@ int ParameterMatching(int argc, const char *argv[], int fd)
         }
         DumpMemData(fd, &param);
     } else if (argc == FOUR_OF_ARGC_PARAMETERS && strcmp(argv[ONE_OF_ARGC_PARAMETERS], "-m") == 0) {
+        uint64_t start = 0;
+        uint64_t size = 0;
+        if (!ParseDumpUint64(argv[TWO_OF_ARGC_PARAMETERS], &start) ||
+            !ParseDumpUint64(argv[THREE_OF_ARGC_PARAMETERS], &size)) {
+            printf("Invalid memstart or memsize\n");
+            return -1;
+        }
         param.type = DUMP_TO_STDOUT;
-        param.start = strtoull(argv[TWO_OF_ARGC_PARAMETERS], NULL, BUF_SIZE_16);
-        param.size = strtoull(argv[THREE_OF_ARGC_PARAMETERS], NULL, BUF_SIZE_16);
+        param.start = start;
+        param.size = size;
         DumpMemData(fd, &param);
     }  else if (argc == FIVE_OF_ARGC_PARAMETERS && strcmp(argv[ONE_OF_ARGC_PARAMETERS], "-m") == 0) {
+        uint64_t start = 0;
+        uint64_t size = 0;
+        if (!ParseDumpUint64(argv[TWO_OF_ARGC_PARAMETERS], &start) ||
+            !ParseDumpUint64(argv[THREE_OF_ARGC_PARAMETERS], &size)) {
+            printf("Invalid memstart or memsize\n");
+            return -1;
+        }
         param.type = DUMP_TO_FILE;
-        param.start = strtoull(argv[TWO_OF_ARGC_PARAMETERS], NULL, BUF_SIZE_16);
-        param.size = strtoull(argv[THREE_OF_ARGC_PARAMETERS], NULL, BUF_SIZE_16);
+        param.start = start;
+        param.size = size;
         if (strncpy_s(param.filePath, sizeof(param.filePath),
             argv[FOUR_OF_ARGC_PARAMETERS], sizeof(param.filePath) - 1) != EOK) {
             printf("param.filePath is not enough or strncpy_s failed\n");
